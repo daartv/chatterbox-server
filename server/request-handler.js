@@ -11,6 +11,8 @@ this file and include it in basic-server.js so that it actually works.
 *Hint* Check out the node module documentation at http://nodejs.org/api/modules.html.
 
 **************************************************************/
+var data = {};
+data.results = [];
 
 var requestHandler = function(request, response) {
   // Request and Response come from node's http module.
@@ -28,18 +30,27 @@ var requestHandler = function(request, response) {
   // debugging help, but you should always be careful about leaving stray
   // console.logs in your code.
   console.log('Serving request type ' + request.method + ' for url ' + request.url);
-
-  if (request.method == 'POST' && request.url.includes('/classes/messages')) {
-    console.log('Post!');
-    
-  }
-
-  if (request.method == 'GET') {
-    console.log('GOT!');
-  }
-
   // The outgoing status.
   var statusCode = 200;
+
+  if (request.url === '/classes/messages') {
+    if (request.method === 'POST') {
+      statusCode = 201;
+      data.results.push(request._postData);
+      console.log(data);
+      console.log('REQUEST!!!:', request);
+      console.log('RESPONSE!!:', response);    
+    }
+  }
+
+  if (request.method === 'GET') {
+    if (request.url === '/classes/messages') {
+      console.log('GOT!');
+      statusCode = 200;
+    }
+  }
+
+
 
   // See the note below about CORS headers.
   var headers = defaultCorsHeaders;
@@ -61,8 +72,6 @@ var requestHandler = function(request, response) {
   //
   // Calling .end "flushes" the response's internal buffer, forcing
   // node to actually send all the data over to the client.
-  var data = {};
-  data.results = [];
   response.end(JSON.stringify(data));
 };
 
