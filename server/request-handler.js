@@ -28,7 +28,15 @@ var requestHandler = function(request, response) {
   // debugging help, but you should always be careful about leaving stray
   // console.logs in your code.
   console.log('Serving request type ' + request.method + ' for url ' + request.url);
-  /*console.log(request);*/
+
+  if (request.method == 'POST' && request.url.includes('/classes/messages')) {
+    console.log('Post!');
+    
+  }
+
+  if (request.method == 'GET') {
+    console.log('GOT!');
+  }
 
   // The outgoing status.
   var statusCode = 200;
@@ -53,7 +61,7 @@ var requestHandler = function(request, response) {
   //
   // Calling .end "flushes" the response's internal buffer, forcing
   // node to actually send all the data over to the client.
-  var data = {}
+  var data = {};
   data.results = [];
   response.end(JSON.stringify(data));
 };
