@@ -37,15 +37,17 @@ var requestHandler = function(request, response) {
     if (request.method === 'POST') {
       statusCode = 201;
       data.results.push(request._postData);
-      console.log(data);
+/*      console.log(data);
       console.log('REQUEST!!!:', request);
-      console.log('RESPONSE!!:', response);    
+      console.log('RESPONSE!!:', response);  */  
     }
+  } else {
+    statusCode = 404;
   }
 
   if (request.method === 'GET') {
     if (request.url === '/classes/messages') {
-      console.log('GOT!');
+      /*console.log('GOT!');*/
       statusCode = 200;
     }
   }
