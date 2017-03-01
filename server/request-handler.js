@@ -1,3 +1,4 @@
+var url = require('url');
 var messages = [];
 
 var defaultCorsHeaders = {
@@ -9,19 +10,18 @@ var defaultCorsHeaders = {
 
 var requestHandler = function(request, response) {
   var headers = defaultCorsHeaders;
-
+  /*console.log('URL PARSE: ', url.parse(request.url));*/
   console.log('Serving request type ' + request.method + ' for url ' + request.url);
+  var urlPathName = url.parse(request.url);
 
   if (request.method === 'OPTIONS') {
-    response.setHeader('Access-Control-Allow-Credentials', 'true');
-    response.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT');
-    response.setHeader('Access-Control-Allow-Headers', 'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers');
     response.writeHead(200, headers);
-    response.end();
+    response.end();  
     return;
   }
 
-  if (request.method === 'POST' && request.url === '/classes/messages') {
+//request.url = /classes/messages
+  if (request.method === 'POST' && urlPathName.pathname === '/classes/messages') {
     var body = '';
     request.on('data', (chunk) => {
       body += chunk;
@@ -35,12 +35,11 @@ var requestHandler = function(request, response) {
       response.writeHead(201, headers);
       response.end();
 
-
     });
     return;
   }
 
-  if (request.method === 'GET' && request.url === '/classes/messages') {
+  if (request.method === 'GET' && urlPathName.pathname === '/classes/messages') {
     var payload = {};
     payload.results = messages;
     headers['Content-Type'] = 'application/json';
